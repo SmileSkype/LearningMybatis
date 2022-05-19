@@ -6,4 +6,10 @@ public interface EmployeeMapper {
     Employee getEmplById(Integer id);
 
     Employee getEmplById2(Integer id);
+
+    boolean addEmp(Employee employee);
+
+    Integer updateEmp(Employee employee);
+
+    void deleteEmpById(int id);
 }

@@ -122,4 +122,36 @@ public class MybatisTest {
             sqlSession.close();
         }
     }
+
+    /**
+     * 测试增删改
+     * 1、mybatis允许增删改直接定义以下类型返回值
+     *  Integer Long Boolean void
+     * 2、我们需要手动提交数据
+     *  sqlSessionFactory.openSession(); ==》手动提交
+     *  sqlSessionFactory.openSession(true); ==》自动提交
+     */
+    @Test
+    public void test5() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            // 测试添加
+            Employee employee = new Employee(null,"smileskye1","smileskype1@foxmail.com","1");
+            boolean total = mapper.addEmp(employee);
+            sqlSession.commit();
+            System.out.println("执行结果： " + total + "  employee id is " + employee.getId());
+            // 测试修改
+//            Employee employee = new Employee(3,"smileskye",null,"1");
+//            Integer i = mapper.updateEmp(employee);
+//            System.out.println(i);
+            // 测试删除
+//            mapper.deleteEmpById(3);
+            // 手动提交数据
+            sqlSession.commit();
+        } finally {
+            sqlSession.close();
+        }
+    }
 }

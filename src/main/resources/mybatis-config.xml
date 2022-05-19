@@ -4,8 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
+    <!--
+        jdbc.driver=com.mysql.jdbc.Driver
+        jdbc.url=jdbc:mysql://127.0.0.1:3306/learnmybatis
+        jdbc.username=root
+        jdbc.password=123456
+    -->
     <!-- 1.引入外部资源 -->
-    <properties resource="db.properties"></properties>
+    <properties resource="db.properties">
+    </properties>
 
     <!--
         2.settings
@@ -34,7 +41,7 @@
         -->
 
         <!-- 3、批量起别名的情况下，使用@Alias注解为某个类型指定新的别名 -->
-        <package name="com.smile.skype.learnmybatis.bean"/>
+        <!--<package name="com.smile.skype.learnmybatis.bean"/>-->
     </typeAliases>
 
     <!--
@@ -50,7 +57,7 @@
 								|JNDI(JndiDataSourceFactory)
 					自定义数据源：实现DataSourceFactory接口，type是全类名
      -->
-    <environments default="dev_mysql">
+    <environments default="dev_oracle">
         <environment id="dev_mysql">
             <transactionManager type="JDBC" />
             <dataSource type="POOLED">
@@ -104,12 +111,10 @@
 						比较重要的，复杂的Dao接口我们来写sql映射文件
 						不重要，简单的Dao接口为了开发快速可以使用注解；
 		-->
-        <!-- <mapper resource="mybatis/mapper/EmployeeMapper.xml"/> -->
-        <!-- <mapper class="com.atguigu.mybatis.dao.EmployeeMapperAnnotation"/> -->
-
-        <!-- 批量注册： -->
         <mapper resource="mysql/EmployeeMapper.xml"/>
         <mapper class="com.smile.skype.learnmybatis.dao.EmployeeMapperAnnotation" />
+        <!-- 批量注册： -->
+        <!--<package name="com.smile.skype.learnmybatis.dao"/>-->
 
     </mappers>
 
