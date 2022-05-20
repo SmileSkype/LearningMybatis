@@ -14,6 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 1、接口式编程
@@ -150,6 +154,49 @@ public class MybatisTest {
 //            mapper.deleteEmpById(3);
             // 手动提交数据
             sqlSession.commit();
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    /**
+     * 测试各种条件的查询
+     *     就是mybatis的参数传递
+     * @throws IOException
+     */
+    @Test
+    public void test6() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            Employee ep = mapper.getEmpByIdAndLastName(1,"tom");
+            System.out.println(ep);
+            System.out.println("ep -----------------");
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("id",1);
+            map.put("lastName","tom");
+            map.put("tableName","tbl_employee");
+            Employee employee = mapper.getEmpByMap(map);
+            System.out.println(employee);
+            System.out.println("employee -----------------");
+            List<Employee> list = mapper.getEmpsByLastNameLike("%smile%");
+            list.stream().forEach(emp -> System.out.println(emp));
+            System.out.println("list -----------------");
+
+            Map<String,Object> empMap = mapper.getEmpByIdReturnMap(1);
+            System.out.println(empMap);
+            System.out.println("empMap -----------------");
+            Map<String,Employee> employeeMap = mapper.getEmpByLastNameLikeReturnMap("%smile%");
+            System.out.println(employeeMap);
+            System.out.println("employeeMap -----------------");
+
+            List<Integer> idList = new ArrayList<>();
+            idList.add(1);
+            idList.add(4);
+            List<Employee> idResultList = mapper.getEmpsByIdList(idList);
+            System.out.println(idResultList);
+            System.out.println("idResultList -----------------");
         } finally {
             sqlSession.close();
         }
