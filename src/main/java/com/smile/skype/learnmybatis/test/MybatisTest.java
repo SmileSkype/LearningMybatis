@@ -1,8 +1,11 @@
 package com.smile.skype.learnmybatis.test;
 
+import com.smile.skype.learnmybatis.bean.Department;
 import com.smile.skype.learnmybatis.bean.Employee;
+import com.smile.skype.learnmybatis.dao.DepartmentMapper;
 import com.smile.skype.learnmybatis.dao.EmployeeMapper;
 import com.smile.skype.learnmybatis.dao.EmployeeMapperAnnotation;
+import com.smile.skype.learnmybatis.dao.EmployeeMapperPlus;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 1、接口式编程
@@ -201,4 +205,61 @@ public class MybatisTest {
             sqlSession.close();
         }
     }
+
+
+    /**
+     * 测试员工和部门相关内容
+     * 1、在没有配置lazyLoadTriggerMethods的情况下
+     * 1.1 打印pojo类,调用toString()方法会触发懒加载
+     * 1.2 debug模式悬浮在上面的时候也会触发拦截在
+     * 2、在配置<setting name="lazyLoadTriggerMethods" value=""/>时
+     * 2.1 无法时打印pojo类,还是debug悬浮,都不会触发懒加载
+     */
+    @Test
+    public void test7() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            EmployeeMapperPlus mapper = sqlSession.getMapper(EmployeeMapperPlus.class);
+//            Employee ep = mapper.getEmpById(1);
+//            System.out.println(ep);
+//
+//            // 查询员工的同时,也将部门查询出来
+//            Employee empAndDept = mapper.getEmpAndDeptById(1);
+//            System.out.println(empAndDept);
+//            System.out.println(empAndDept.getDept());
+            // 分步查询
+            Employee empAndDeptStep = mapper.getEmpAndDeptStepById(1);
+            System.out.println(empAndDeptStep.getLastName());
+            System.out.println(empAndDeptStep);
+//            System.out.println(empAndDeptStep.getDept());
+            System.out.println("---------------");
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    /**
+     * 测试部门相关内容
+     */
+    @Test
+    public void test8() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        try {
+            DepartmentMapper mapper = sqlSession.getMapper(DepartmentMapper.class);
+            Department department = mapper.getDeptByIdPlus(1);
+            System.out.println(department);
+            System.out.println("---------------");
+            // 分步
+            Department dept = mapper.getDeptByIdStep(1);
+            System.out.println(dept);
+            System.out.println(dept.getEmps().stream().map(Employee::getId).collect(Collectors.toList()));
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+
 }
+

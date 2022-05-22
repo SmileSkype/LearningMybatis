@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smile.skype.learnmybatis.dao.EmployeeMapperPlus">
+
+    <!--自定义某个javaBean的封装规则
+	type：自定义规则的Java类型
+	id:唯一id方便引用
+	  -->
+    <resultMap id="MySimpleEmp" type="com.smile.skype.learnmybatis.bean.Employee">
+        <!--指定主键列的封装规则
+		id定义主键会底层有优化；
+		column：指定数据库中哪一列
+		property：指定对应的javaBean属性
+		  -->
+        <id column="id" property="id"/>
+        <!-- 定义普通列封装规则 -->
+        <result column="last_name" property="lastName" />
+        <!-- 其他不指定的列会自动封装：我们只要写resultMap就把全部的映射规则都写上。 -->
+        <result column="email" property="email" />
+        <result column="gender" property="gender" />
+    </resultMap>
+
+    <!-- resultMap:自定义结果集映射规则；  -->
+    <!-- public Employee getEmpById(Integer id); -->
+    <select id="getEmpById" resultMap="MySimpleEmp">
+        select * from tbl_employee where id=#{id}
+    </select>
+
+    <!--
+	场景一：
+		查询Employee的同时查询员工对应的部门
+		Employee===Department
+		一个员工有与之对应的部门信息；
+		id  last_name  gender    d_id     did  dept_name (private Department dept;)
+	 -->
+
+    <!--
+        联合查询：级联属性封装结果集
+      -->
+    <resultMap id="MyDifEmp" type="com.smile.skype.learnmybatis.bean.Employee">
+        <id column="id" property="id"/>
+        <!-- 定义普通列封装规则 -->
+        <result column="last_name" property="lastName" />
+        <!-- 其他不指定的列会自动封装：我们只要写resultMap就把全部的映射规则都写上。 -->
+        <result column="email" property="email" />
+        <result column="gender" property="gender" />
+        <result column="d_id" property="dept.id" />
+        <result column="dept_name" property="dept.departmentName" />
+    </resultMap>
+
+    <!-- 使用association定义关联的单个对象的封装规则 -->
+    <resultMap id="MyDiffEmp2" type="com.smile.skype.learnmybatis.bean.Employee">
+        <id column="id" property="id"/>
+        <!-- 定义普通列封装规则 -->
+        <result column="last_name" property="lastName" />
+        <!-- 其他不指定的列会自动封装：我们只要写resultMap就把全部的映射规则都写上。 -->
+        <result column="email" property="email" />
+        <result column="gender" property="gender" />
+        <!--
+            association标签可以指定联合查询的javaBean对象
+            property 指定哪个属性是联合的对象
+            javaType：指定联合对象的类型,不能省略
+         -->
+        <association property="dept" javaType="com.smile.skype.learnmybatis.bean.Department">
+            <id column="did" property="id"/>
+            <result column="dept_name" property="departmentName" />
+        </association>
+    </resultMap>
+    <!-- 查询员工的同时将部门查询出来 -->
+    <select id="getEmpAndDeptById" resultMap="MyDiffEmp2">
+        SELECT e.id id,e.email,e.last_name last_name,e.gender gender,e.d_id d_id,
+		d.id did,d.dept_name dept_name FROM tbl_employee e,tbl_dept d
+		WHERE e.d_id=d.id AND e.id=#{id}
+    </select>
+
+
+    <resultMap id="MyEmployeeStep" type="com.smile.skype.learnmybatis.bean.Employee">
+        <id column="id" property="id"/>
+        <!-- 定义普通列封装规则 -->
+        <result column="last_name" property="lastName" />
+        <!-- 其他不指定的列会自动封装：我们只要写resultMap就把全部的映射规则都写上。 -->
+        <result column="email" property="email" />
+        <result column="gender" property="gender" />
+        <!--
+            association 定义关联对象的封装规则
+            select 表示当前属性是调用select指定的方法查询的结果
+            column: 表示将哪一列的值传给这个方法
+            流程：使用select指定的方法,传入column指定列参数的值查询出对象,并封装给property指定的属性
+         -->
+        <association property="dept"
+                     select="com.smile.skype.learnmybatis.dao.DepartmentMapper.getDeptById"
+                     column="d_id">
+        </association>
+    </resultMap>
+    <!-- 采用分步查询的方式 -->
+    <select id="getEmpAndDeptStepById" resultMap="MyEmployeeStep" >
+        select * from tbl_employee where id=#{id}
+    </select>
+
+    <!-- 利用部门ID查询员工 -->
+    <select id="getEmpByDeptId" resultType="com.smile.skype.learnmybatis.bean.Employee">
+        select * from tbl_employee where d_id = #{deptId}
+    </select>
+
+    <!-- 可以使用延迟加载（懒加载）；(按需加载)
+	 	Employee==>Dept：
+	 		我们每次查询Employee对象的时候，都将一起查询出来。
+	 		部门信息在我们使用的时候再去查询；
+	 		分段查询的基础之上加上两个配置：
+	  -->
+</mapper>
