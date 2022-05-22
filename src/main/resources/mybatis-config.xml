@@ -125,6 +125,7 @@
         <mapper resource="mysql/EmployeeMapperPlus.xml"/>
         <mapper resource="mysql/DepartmentMapper.xml"/>
         <mapper class="com.smile.skype.learnmybatis.dao.EmployeeMapperAnnotation" />
+        <mapper resource="mysql/EmployeeDynamicMapper.xml"/>
         <!-- 批量注册： -->
         <!--<package name="com.smile.skype.learnmybatis.dao"/>-->
 

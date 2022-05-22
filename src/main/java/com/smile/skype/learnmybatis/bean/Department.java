@@ -7,7 +7,9 @@ public class Department {
     private String departmentName;
     private List<Employee> emps;
 
-
+    public Department(Integer id) {
+        this.id = id;
+    }
 
     public List<Employee> getEmps() {
         return emps;
