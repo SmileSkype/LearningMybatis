@@ -28,9 +28,11 @@
         <setting name="lazyLoadingEnabled" value="true" />
         <!-- 开启时，任一方法的调用都会加载该对象的所有延迟加载属性。 否则，每个延迟加载属性会按需加载（参考 lazyLoadTriggerMethods)。-->
         <setting name="aggressiveLazyLoading" value="false" />
-
         <!-- lazyLoadTriggerMethods	指定对象的哪些方法触发一次延迟加载。	用逗号分隔的方法列表。	equals,clone,hashCode,toString -->
         <setting name="lazyLoadTriggerMethods" value=""/>
+
+        <!-- 二级缓存开关 -->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
 
     <!--

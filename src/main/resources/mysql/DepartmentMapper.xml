@@ -9,6 +9,8 @@
         <result column="dept_name" property="departmentName"/>
     </resultMap>
 
+    <!-- 引用缓存：namespace：指定和哪个名称空间下的缓存一样 -->
+    <cache-ref namespace="com.smile.skype.learnmybatis.dao.EmployeeMapper"/>
     <!-- 根据id查询部门信息 -->
     <select id="getDeptById" resultType="com.smile.skype.learnmybatis.bean.Department">
         select id,dept_name departmentName from tbl_dept where id=#{id}

@@ -1,15 +1,21 @@
 package com.smile.skype.learnmybatis.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Department {
+public class Department implements Serializable {
     private Integer id;
     private String departmentName;
     private List<Employee> emps;
 
+    public Department() {
+
+    }
+
     public Department(Integer id) {
         this.id = id;
     }
+
 
     public List<Employee> getEmps() {
         return emps;

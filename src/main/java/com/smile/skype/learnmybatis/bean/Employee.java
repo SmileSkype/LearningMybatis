@@ -2,9 +2,11 @@ package com.smile.skype.learnmybatis.bean;
 
 import org.apache.ibatis.type.Alias;
 
+import java.io.Serializable;
+
 //@Alias("123")
 //如果添加Alias注解,需要在mybatis-config.xml中进行扫描
-public class Employee {
+public class Employee implements Serializable {
     private Integer id;
     private String lastName;
     private String email;
