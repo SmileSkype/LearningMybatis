@@ -55,6 +55,15 @@
         <!--<package name="com.smile.skype.learnmybatis.bean"/>-->
     </typeAliases>
 
+    <!-- 注册插件 -->
+    <plugins>
+        <plugin interceptor="com.smile.skype.learnmybatis.dao.MyFirstPlugin">
+            <property name="username" value="root"/>
+            <property name="password" value="123456"/>
+        </plugin>
+        <plugin interceptor="com.smile.skype.learnmybatis.dao.MySecondPlugin" />
+    </plugins>
+
     <!--
         4.environments 环境，mybatis支持配置多种环境信息,default指定默认使用的环境
             transactionMapper: 事务管理器;
