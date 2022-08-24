@@ -18,6 +18,13 @@ public class ClassTest {
         for (Field field:fields) {
             System.out.println("name:" + field.getName() + " AnnotatedType:" + field.getAnnotatedType() + " GenericType:" + field.getGenericType() + " Modifiers"+field.getModifiers());
         }
+
+        System.out.println("================");
+        String str = "12345";
+        int i = str.indexOf("2");
+        System.out.println(i);
+        System.out.println(str.substring(0,i));
+        System.out.println(str.substring(i,str.length()));
     }
 }
 
